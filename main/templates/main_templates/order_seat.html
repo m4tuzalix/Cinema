@@ -1,0 +1,122 @@
+{% extends "main_templates/main.html" %}
+{% load static %}
+{% block content %}
+    <div class="container">
+      <table class="table table-bordered table-dark table-responsive">
+        <tbody>
+          {% for row in seats_range %}
+          <tr>
+            <th scope="row" class="bg-danger">{{row}}</th>
+            {% for number in seats_range %}
+              <td class="text-center" style="width:5%;" row="{{row}}" onclick="change_bg(this)"><a href="#"></a>{{forloop.counter}}</a></td>
+            {% endfor %} 
+          </tr>
+          {% endfor %} 
+        </tbody>
+      </table>
+    </div>
+    <div class="side-bar">
+      <h1>Main Menu</h1>
+      <div class="side-bar-container">
+        <ul class="side-options">
+          <li>
+            <span>{{request.user.username}}</span>
+          </li>
+          <li>
+            <span>Seats:0</span>
+          </li>
+          <li>
+            <span>Price:$0</span>
+          </li>
+        </ul>
+          <button class="order" onclick="get_all_fields()">ORDER</button>
+      </div>
+    </div>
+<script>
+
+  var counter = 0
+
+  $(function (global) {
+      global.fields_color = $(".table-bordered tbody td").css("background-color")
+    }(this))
+
+  /// shows already taken seats
+  $(function(){
+    var array_of_reserved = {{reserved|safe}}
+    for(i=0;i<array_of_reserved.length;i++){
+      $(".table-bordered tbody td").each(function(){
+        if (array_of_reserved[i].slice(0,1) == $(this).attr("row")){
+          if (array_of_reserved[i].slice(2,array_of_reserved[i].length) == $(this).text()){
+            $(this).css("background-color", "rgb(6, 9, 180)")
+            $(this).css("pointer-events", "none")
+          }
+        }
+      })
+    }
+    
+  })
+
+    /// user chooses the seats by clicking it
+    function change_bg(element){
+      var color_to_change = fields_color
+      var color_now = $(element).css("background-color")
+      if (color_now === color_to_change){
+        color_to_change = "rgb(255, 0, 0)" /// red
+        counter += 1
+      }
+      else{
+          counter -= 1
+      }
+      $(element).css("background-color", color_to_change)
+
+      count(counter);
+    }
+
+
+    /// checks which seats have been reserved
+    function get_all_fields(){
+      var array = []
+      var color_to_find = "rgb(255, 0, 0)"
+      $(".table-bordered tbody td").each(function(){
+        let current_color = $(this).css("background-color")
+        if(current_color === color_to_find){
+          let user_info = {
+            "id":"{{movie_id}}",
+            "row":$(this).attr("row"),
+            "seat":$(this).text(),
+          }
+          array.push(user_info)
+        }
+      })
+      var new_array = JSON.stringify({array: array})
+      $.ajax({
+        url: "{% url 'make-order' %}",
+        type: 'POST',
+        data: new_array,
+        processData: false,
+        contentType: "application/json",
+        dataType: "json",
+        headers: {"X-CSRFToken":'{{ csrf_token }}'},
+        success: function (result) {
+          console.log(result.d)
+          window.location = "{% url 'confirmation' %}"
+        },
+        error: function (result) {
+            console.log(result);
+        }
+      });
+    }
+    
+    function count(number){
+        input_data = [String(number), String(number*parseFloat("{{movie_price}}"))]
+        rows = ["Seats:", "Price: $"]
+        for(i=1; i<=input_data.length; i++){
+          let to_replace = document.querySelector(".side-bar div ul li:nth-child("+String(i+1)+")") 
+          to_replace.innerHTML = "<span>"+rows[i-1]+input_data[i-1]+"</span>"
+        }     
+    }
+
+</script>
+
+
+{% endblock %}

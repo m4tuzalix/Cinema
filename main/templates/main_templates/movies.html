@@ -1,0 +1,51 @@
+{% extends "main_templates/main.html" %}
+{% load static %}
+{% block content %}
+<section class="text-center mb-4 ml-4 mr-4">
+
+    <!--Grid row-->
+    <div class="row wow fadeIn">
+
+      {% for item,color in Movies_Colors %}
+
+      <div class="col-lg-3 col-md-6 mb-4">
+
+        <!--Card-->
+        <div class="card">
+
+          <!--Card image-->
+          <div class="view overlay">
+            <a href="#">
+              <div class="mask rgba-purple-slight"></div>
+            </a>
+          </div>
+          <!--Card image-->
+
+          <!--Card content-->
+          <div class="card-body text-center purple lighten-4">
+            <h5>
+              <strong>
+                <a href="{{item.absolute}}" class="dark-purple-text">{{item.title}}
+                  <span class="badge badge-{{color}}">{{ item.get_kind_display }}</span>
+                </a>
+              </strong>
+            </h5>
+            <h4 class="font-weight-bold blue-text">
+              <strong>
+                {% if item.discount %}
+                ${{ item.discount }}
+                {% else %}
+                ${{ item.price }}
+                {% endif %}
+              </strong>
+            </h4>
+
+          </div>
+          <!--Card content-->
+
+        </div>
+        <!--Card-->
+
+      </div>
+      {% endfor %}
+{% endblock %}

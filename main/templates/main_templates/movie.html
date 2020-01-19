@@ -1,0 +1,48 @@
+{% extends "main_templates/main.html" %}
+{% load static %}
+{% block content %}
+<div class="container">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="#">Description <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Title</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Price</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Disabled</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ object.order }}">Order</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div class="content-movie">
+    <div>{{object.description}}</div>
+  </div>
+
+</div>
+
+<script type="text/javascript">
+
+$(function(){
+  $(".navbar-nav li a").each(function(){
+    $(this).click(function(){
+      let category_name = this.innerText.toLowerCase()
+      change("{{object.description}}")
+    })
+  })
+    
+});
+function change(category){
+  $('.content-movie').children().html()
+  }
+
+</script>
+{% endblock %}

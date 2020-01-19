@@ -1,0 +1,95 @@
+*{
+    padding: 0;
+    margin: 0;
+    font-family: sans-serif;
+}
+
+body{
+    
+    background-image: url("f369cc07211014d75be4762381341e97.jpg");
+}
+
+.nav-bar{
+    display: flex;
+    padding: 2% 4%;
+}
+
+.nav-logo{
+    padding-top: 50px;
+}
+.nav-logo h1{
+    background-image: url("purple-3d-modern-background-design_53876-87399.jpg");
+    text-shadow: 0px 1px 0px rgba(134, 11, 172, 0.486);
+    font-size: 70px;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.nav-links{
+    flex: 1;
+    font-size: 20px;
+    text-align: right;
+    padding: 2% 6%;
+
+}
+
+.nav-links ul li{
+    list-style: none;
+    display: inline-block;
+    padding: 2% 6%;
+    color: rgb(226, 43, 144);
+    background-color: rgba(168, 43, 226, 0.589);
+    border-radius: 5px;
+    
+}
+
+.nav-links ul a{
+    color: blueviolet;
+    text-decoration: none;
+}
+
+@keyframes nav-list{
+    0%   {font-size: 21; background-color: rgba(168, 43, 226, 0.589);}
+    25%  {font-size: 25; background-color: rgba(225, 40, 250, 0.445);} 
+    50%  {font-size: 28; background-color: rgba(225, 40, 250, 0.600);}
+    75%  {font-size: 31; background-color: rgba(225, 40, 250, 0.800);}
+    100% {font-size: 20; background-color: rgba(168, 43, 226, 0.589);}
+  }
+
+.nav-links ul li:hover{
+    color: rgb(224, 4, 253);
+    padding: 1% 5%;
+    animation: nav-list;
+    animation-duration: 4s;
+}
+
+.content{
+    margin-top: 30px;
+    height: 100vh;
+}
+
+
+.advertisment{
+    color: rgb(180, 6, 137);
+    right: 0;
+    position: fixed;
+    background-color: rgba(137, 43, 226, 0.438);
+    border-style: solid;
+    text-align: center;
+    margin-right: 2%;
+    height: 40vh;
+    width: 200px;
+}
+
+.advertisment:hover{
+    background-color: rgba(137, 43, 226, 0.589);
+}
+
+footer{
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: rgba(168, 43, 226, 0.589);;
+    color: white;
+    text-align: center;
+}
