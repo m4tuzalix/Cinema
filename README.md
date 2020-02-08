@@ -1,1 +1,1 @@
-# Cinema project - in progress
+# Cinema project - in progress 70% :)
