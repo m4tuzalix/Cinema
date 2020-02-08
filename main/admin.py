@@ -1,7 +1,20 @@
 from django.contrib import admin
-from .models import Movies, Seat, Reservation
+from .models import Movies, Reservation, Movie_dates, Hours, User_Seats
+from django.contrib.auth.models import User
+from users.models import Profile
 
 
-admin.site.register(Movies)
-admin.site.register(Seat)
-admin.site.register(Reservation)
+
+models = [Movies, Reservation, Profile, Movie_dates, Hours]
+
+for model in models:
+    admin.site.register(model)
+
+
+
+
+
+
+
+
+

@@ -3,8 +3,9 @@
 <head>
     <title>Cinema project</title>
     <meta name="viewport" content="width=device-width, initail-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'bs_styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'bs_style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'order_style.css' %}">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
@@ -25,17 +26,19 @@
         </div>
         <div class="nav-links">
             <ul class="links">
+              {% if user.is_authenticated %}
+                <a href="{% url 'profile' %}"><img class="rounded-circle account-img" src="{{ request.user.profile.avatar.url }}" style="max-width: 70px; max-height: 70px; margin-right: 15px;"></a>
                 <a href="{% url 'home' %}"><li>Home</li></a>
-                {% if user.is_authenticated %}
-                <a href="{% url 'profile' %}"><li>Account</li></a>
+                <a href="{% url 'profile' %}"><li>Profile</li></a>
                 <a href="#"><li>About</li></a>
                 <a href="{% url 'movies' %}"><li>Movies</li></a>
                 <a href="{% url 'logout' %}"><li>Logout</li></a>
-                {%else%}
+              {%else%}
+                <a href="{% url 'home' %}"><li>Home</li></a>
                 <a href="{% url 'login' %}"><li>Login</li></a>
                 <a href="#"><li>About</li></a>
                 <a href="{% url 'movies' %}"><li>Movies</li></a>
-                {%endif%}
+              {%endif%}
             </ul>
         </div>
     </nav>

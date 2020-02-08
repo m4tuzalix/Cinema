@@ -1,0 +1,55 @@
+
+.navbar li{
+    margin-left: 30px;
+}
+.content-movie{
+    display: inline-flexbox;
+}
+
+.content-movie h1{
+    text-align: center;
+    margin-left: 5px;
+    padding-bottom: 10px;
+    color: rgba(79, 12, 141, 0.733);
+}
+
+.content-movie li{
+    font-size: 15px;
+    text-align: center;
+    color: rgb(7, 2, 2);
+    text-decoration: none;
+    list-style: none;
+    list-style-type: circle;
+    margin-left: 20px;
+    margin-bottom: 5px;
+}
+
+.content-movie span{
+    text-align: center;
+    margin-left: 10px;
+    font-size: 15px;
+    color: rgb(8, 1, 1);
+}
+
+
+.content-movie li:hover{
+    margin-left: 0px;
+    font-size: 17px;
+}
+
+.container-movie{
+    height: 50%;
+    display: none;
+}
+
+
+/*----------------order_seat---------------------------------------*/
+.screen{
+    background-color: rgb(16, 13, 155);
+    color: white;
+    font-size: 15px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+

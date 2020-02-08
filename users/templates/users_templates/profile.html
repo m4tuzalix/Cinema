@@ -3,17 +3,30 @@
 {% load crispy_forms_tags %}
 {% block content %}
 <div class="container">
-    <div class="mt-5">
+    <div class="profile-content">
+        <div class="mt-5">
+            <nav>
+                <ul class="profile_nav">
+                    <a onclick="res()"><li>Reservations</li></a>
+                    <a href="#"><li>option</li></a>
+                    <a href="#"><li>option</li></a>
+                </ul>
+            </nav>
             <div class="media-body mt-3">
-                    <h2 class="account-heading">User: {{user.username}}</h2>
-                    <p class="text-secondary">Email: {{user.email}}</p>
+                <img class="rounded-circle account-img" src="{{ user.profile.avatar.url }}">
+                <h2 class="account-heading" style="color: red; margin-left: 20px;">Hello, <strong>{{request.user.username}}</strong></h2>
             </div>
-            <form method="POST" enctype="multipart/form-data">
-                {%csrf_token%}
-                <div class='form-group'>
-                    <button class='btn btn-outline-info' type="submit">Update</button>
-                </div>
-             </form>
+            <div class="profile_info">
+                <ul>
+                    <li>Name:<strong>{{user_info.first_name}}</strong></li>
+                    <li>Last Name:<strong>{{user_info.last_name}}</strong></li>
+                    <li>Email:<strong>{{user_info.email}}</strong></li>
+                </ul>
+            </div>
+        </div>
     </div>
 </div>
+
+<script>
+</script>
 {% endblock %}

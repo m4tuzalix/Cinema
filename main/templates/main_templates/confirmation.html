@@ -2,23 +2,32 @@
 {% load static %}
 {% block content %}
     <div class="container">
-        <div class="movie-title">
-            <h1>{{movie.title}}<img class="approved" src="https://media.istockphoto.com/vectors/approved-red-grunge-round-vintage-rubber-stamp-vector-id648514566"></h1>
-        </div>
-        <div class="confirmation-content">
-            <div class="seats-section">
-                <h2>Your requested seats</h2>
-                {% for seat in seats %}
-                    <span>{{seat}}</span><br>
-                {% endfor %}
-                <form method='post' action="buy/{{movie.id}}" class="form-inline">
-                    {% csrf_token %}
-                    <input class="btn btn-primary" type="submit" value="BUY">
-                </form>
+        <div class="for_movies">
+            <div class="movie-title">
+                <h1>{{movie.title}}<img class="approved" src="https://media.istockphoto.com/vectors/approved-red-grunge-round-vintage-rubber-stamp-vector-id648514566"></h1>
+            </div>
+            <div class="confirmation-content">
+                <div class="seats-section">
+                    <h2>Your requested seats</h2>
+                    {% for seat in seats %}
+                        <span>{{seat}}</span><br>
+                    {% endfor %}
+                    <form method='post' action="buy/{{movie.id}}" class="form-inline">
+                        {% csrf_token %}
+                        <input class="btn btn-primary" type="submit" value="BUY">
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 
 <script>
+    $(function change_confirmation_bg(){
+      $("body").css("background", "url({{movie.image.url}})")
+      $("body").css("background-repeat", "no-repeat")
+      $("body").css("background-size", "cover")
+      $("body").css("background-attachment", "fixed")
+      $("body").css("background-position", "center")
+    })
 </script>
 {% endblock %}

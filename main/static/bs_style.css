@@ -1,0 +1,64 @@
+.container #logout{
+    color: red;
+    text-align: center;
+}
+.container legend{
+    color: red;
+}
+
+.container small{
+    color: red;
+}
+
+
+fieldset.form-group{
+    color: red;
+}
+
+fieldset.form-group li{
+    list-style: square;
+    margin-left: 20px
+}
+
+#logout{
+    color: rgba(218, 106, 218, 0.692);
+    font-size: 40px;
+    background-color: rgba(155, 27, 155, 0.52);
+}
+
+.table-bordered{
+    float: left;
+}
+.table-bordered tbody tr td{
+    background-color: rgb(121, 12, 131);
+}
+
+
+.col-lg-3 .card{
+    background-color: rgba(139, 20, 218, 0.678);
+    border-radius: 10px;
+}
+
+.col-lg-3 .card a{
+    color: rgb(228, 47, 213);
+    text-decoration: none;
+}
+
+.col-lg-3 .card:hover{
+    background-color: rgba(185, 20, 218, 0.541);
+}
+
+.form-group button{
+    background-color: rgba(137, 43, 226, 0.671);
+}
+
+.form-group button:hover{
+    background-color: rgba(137, 43, 226, 0.39);
+}
+
+.media-body img{
+    max-width: 100px;
+    max-height: 100px;
+    margin-bottom: 15px;
+}
+

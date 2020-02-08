@@ -2,47 +2,187 @@
 {% load static %}
 {% block content %}
 <div class="container">
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" href="#">Description <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Title</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Price</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Disabled</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{ object.order }}">Order</a>
-        </li>
-      </ul>
+  <div class="container-movie">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Description <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Cew</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" onclick="show_dates()">Find the suitable date and make the order</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="content-movie">
+      {{object.description}}
     </div>
-  </nav>
-  <div class="content-movie">
-    <div>{{object.description}}</div>
   </div>
-
 </div>
 
 <script type="text/javascript">
 
-$(function(){
-  $(".navbar-nav li a").each(function(){
-    $(this).click(function(){
-      let category_name = this.innerText.toLowerCase()
-      change("{{object.description}}")
-    })
-  })
+const all_dates = {{dates|safe}} // Dictionary with dates/hours
+var close_link = ""
+var change_color = ""
+var info = ""
+
+////// clears global variables
+function clear(){
+  close_link = ""
+  change_color = ""
+  info = ""
+}
+
+///// ajax request to send the choosen date/hour of movie
+function Send_data_to_views(element){
+  var date = element.getAttribute("date")
+  var hour = element.innerText
+  var container = JSON.parse('{ "date":"'+date+'", "hour":"'+hour+'"}')
+  var json_container = JSON.stringify({container:container})
+  $.ajax({
+    url: "{% url 'date-choose' %}",
+    type: 'POST',
+    data: json_container,
+    processData: false,
+    contentType: "application/json",
+    dataType: "json",
+    headers: {"X-CSRFToken":'{{ csrf_token }}'},
+    success: function (result) {
+      console.log(result.d)
+      window.location = "{% url 'movie-order' pk=object.id %}"
+    },
+    error: function (result) {
+        console.log(result);
+    }
+  });
+ 
+  
+}
+////// supportive to change inner html of headers
+function override_content(content, type){
+  var header = ""
+  if(type === "dates"){
+    header = "<h1>Available dates:</h1>"
+  }
+  else{
+    header = "<h1>Available Hours:</h1>"
+  }
+  document.querySelector(".content-movie").innerHTML = header + content
+}
+
+////// Displays available dates
+function show_dates(){
+  const dates_length = Object.keys(all_dates).length
+  var dates = ""
+  for(i=0; i<dates_length; i++){
+    const key = Object.keys(all_dates)[i]
+    if(date_time_comparison(key, "") == false){
+      close_link = "style='pointer-events: none;'"
+      change_color = "style='color: red;'"
+      info = "(OUTDATED)"
+    }
+    const new_date = new Date(key).toLocaleDateString("en-US", { weekday: 'long' })
+    const value = String(key)
+    dates += "<a href='#'"+close_link+"><span>"+String(new_date)+"</span><li "+change_color+"onclick='show_hours(this)'>"+value+info+"</li></a>"
+    clear() // clears if variables
+  }
+  override_content(dates, "dates")
+}
+
+////// Displays available hours
+function show_hours(element){
+  var hours = ""
+  const date_choosen = element.innerText
+  const available_hours = all_dates[date_choosen]
+  for(i=0;i<available_hours.length;i++){
+    var key = available_hours[i]
+    if(date_time_comparison(key, date_choosen) == false){
+      close_link = "style='pointer-events: none;'"
+      change_color = "style='color: red;'"
+    }
+    hours += "<a href='#'"+close_link+" date='"+String(date_choosen)+"' onclick='Send_data_to_views(this)''><li "+change_color+">"+key+"</li></a>"
+    clear() // clears if variables
+  }
+
+  override_content(hours, "hours")
+}
+
+/////// checks if either current date is equal or lower than movie date and if 30 min deadline is kept.
+function date_time_comparison(element,date_for_time){
+  const normal_date = new Date();
+  const today = normal_date.getFullYear() + '-'
+             + ('0' + (normal_date.getMonth()+1)).slice(-2) + '-'
+             + ('0' + normal_date.getDate()).slice(-2);
+  const current_time = ('0' + normal_date.getHours()).slice(-2) + ':'
+             + ('0' + normal_date.getMinutes()).slice(-2) + ':'
+             + ('0' + normal_date.getSeconds()).slice(-2);
+
+  if(String(element).substring(2,3) === ":"){
+    const date_time_element = new Date(date_for_time);
+    const str_element = String(element)
+    date_time_element.setHours(str_element.substring(0,2))
+    date_time_element.setMinutes(str_element.substring(3,5))
+    date_time_element.setSeconds(str_element.substring(6,8))
+
+    const time_calculation = (new Date(date_time_element) -  new Date(today+" "+current_time))*0.001 / 60 /// parsing miliseconds to seconds and then to minutes
+    if(time_calculation > 30){
+      return true
+    }
+    else{
+      return false
+    }
+  }
+  else{
+    if(today <= element){
+      return true
+    }
+    else{
+      return false
+    }
+  }
+}
+
+
+///// switches inner html when clicking tabs
+$(function switch_contents(){
+
+    function change(category){
+      document.querySelector(".content-movie").innerHTML = category
+      }
+
+    $(".navbar-nav li a").each(function(){
+      $(this).click(function(){
+        let category_name = this.innerText.toLowerCase()
+        const sections = ["description", "cew"]
+        const django_vars= ["{{object.description}}", "{{object.cew}}"]
+        for(i=0; i <= sections.length; i++){
+          if(category_name.includes(sections[i])){
+            change(django_vars[i])
+          }
+        }
+        
+      });
+    });
     
 });
-function change(category){
-  $('.content-movie').children().html()
-  }
+
+///// adjust background-image to choosen movie
+$(function change_background(){
+  $("body").css("display", "None")
+  $("body").fadeIn(100)
+  $(".container-movie").fadeIn(500)
+  $("body").css("background", "url({{object.image.url}})")
+  $("body").css("background-repeat", "no-repeat")
+  $("body").css("background-size", "cover")
+  $("body").css("background-attachment", "fixed")
+  $("body").css("background-position", "center")
+  $(".nav-logo h1").html("{{object.title}}")
+})
 
 </script>
 {% endblock %}

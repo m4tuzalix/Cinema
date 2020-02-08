@@ -2,6 +2,7 @@
 {% load static %}
 {% block content %}
     <div class="container">
+      <div class="screen">The Screen</div>
       <table class="table table-bordered table-dark table-responsive">
         <tbody>
           {% for row in seats_range %}
@@ -40,9 +41,9 @@
       global.fields_color = $(".table-bordered tbody td").css("background-color")
     }(this))
 
-  /// shows already taken seats
-  $(function(){
-    var array_of_reserved = {{reserved|safe}}
+  // shows already taken seats
+  $(function already_reserved(){
+    const array_of_reserved = {{reserved|safe}} // django array
     for(i=0;i<array_of_reserved.length;i++){
       $(".table-bordered tbody td").each(function(){
         if (array_of_reserved[i].slice(0,1) == $(this).attr("row")){
@@ -56,6 +57,7 @@
     
   })
 
+    
     /// user chooses the seats by clicking it
     function change_bg(element){
       var color_to_change = fields_color
@@ -88,7 +90,9 @@
           array.push(user_info)
         }
       })
-      var new_array = JSON.stringify({array: array})
+      var new_array = JSON.stringify({array: array}) // converts array to string json
+
+      // ajax call to send the data to views.py
       $.ajax({
         url: "{% url 'make-order' %}",
         type: 'POST',
@@ -107,6 +111,7 @@
       });
     }
     
+    /// displays how many seats has been choosen along with price
     function count(number){
         input_data = [String(number), String(number*parseFloat("{{movie_price}}"))]
         rows = ["Seats:", "Price: $"]
@@ -116,6 +121,16 @@
         }     
     }
 
+    $(function change_order_bg(){
+      const new_date = new Date("{{date}}")
+      const day = new_date.toLocaleDateString("en-US", { weekday: 'long' })
+      $("body").css("background", "url(https://www.rms.pl/images/stories/aktualnosci/2018-11/dolby-cinema-1.jpg)")
+      $("body").css("background-repeat", "no-repeat")
+      $("body").css("background-size", "cover")
+      $("body").css("background-attachment", "fixed")
+      $("body").css("background-position", "center")
+      $(".nav-logo h1").html("{{movie_title}}"+"<br>"+"{{date}}"+"("+day+"),<br><span style='color: red;'><big>"+"{{hour}}</big></span>")
+    })
 </script>
 
 
