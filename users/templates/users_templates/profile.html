@@ -7,26 +7,63 @@
         <div class="mt-5">
             <nav>
                 <ul class="profile_nav">
-                    <a onclick="res()"><li>Reservations</li></a>
-                    <a href="#"><li>option</li></a>
-                    <a href="#"><li>option</li></a>
+                    <a onclick="reservations()"><li>Reservations</li></a>
+                    <a onclick="profile()"><li>Profile</li></a>
+                    <a><li>option</li></a>
                 </ul>
             </nav>
             <div class="media-body mt-3">
                 <img class="rounded-circle account-img" src="{{ user.profile.avatar.url }}">
                 <h2 class="account-heading" style="color: red; margin-left: 20px;">Hello, <strong>{{request.user.username}}</strong></h2>
             </div>
-            <div class="profile_info">
-                <ul>
-                    <li>Name:<strong>{{user_info.first_name}}</strong></li>
-                    <li>Last Name:<strong>{{user_info.last_name}}</strong></li>
-                    <li>Email:<strong>{{user_info.email}}</strong></li>
-                </ul>
-            </div>
+            <section class="display_content">
+            </section>
         </div>
     </div>
 </div>
 
 <script>
+    function reservations(){
+        const all_reserved = {{reserved|safe}};
+        var all_movies = "<ul class='res'>"
+        const change_header = document.querySelector(".account-heading").innerHTML = "<strong>Reservations</strong>"
+
+        for(x=0;x<all_reserved.length;x++){
+            const single_movie = "<li><span>"+all_reserved[x]["fields"]["title"]+"</span><img src=/media/"+all_reserved[x]["fields"]["image"]+"></li>"
+            all_movies += single_movie
+        }
+        document.querySelector(".display_content").innerHTML = all_movies+"</ul>"
+
+        $(function(){
+            $(".display_content ul li span").each(function(){
+                $(this).mouseover(function(){
+                    $(this).css("color", "white")
+                    $(this).next().css("max-width", "120", "max-height", "120")
+                }),
+                $(this).mouseleave(function(){
+                    $(this).css("color", "")
+                    $(this).next().css("max-width", "100", "max-height", "100")
+                });
+            });
+        });
+    } 
+
+    $(function(){
+        $(".display_content").html(profile())
+    })
+
+    function profile(){
+        const change_header = document.querySelector(".account-heading").innerHTML = "Hello, <strong>{{request.user.username}}</strong>"
+        var profile_info = "<div class='profile_info'>"+
+                                "<ul>"+
+                                    "<li>Name:<strong>{{user_info.first_name}}</strong></li>"+
+                                    "<li>Last Name:<strong>{{user_info.last_name}}</strong></li>"+
+                                    "<li>Email:<strong>{{user_info.email}}</strong></li>"+
+                                "</ul>"+
+                            "</div>"
+        document.querySelector(".display_content").innerHTML = profile_info;
+    }
+
+
 </script>
 {% endblock %}

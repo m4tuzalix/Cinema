@@ -19,7 +19,9 @@ class UserRegisterForm(UserCreationForm):
         
     def __init__(self, *args, **kwargs):
         super(UserRegisterForm, self).__init__(*args, **kwargs)
-        self.fields['password2'].help_text = None
-        self.fields['username'].help_text = "Max 20 characters"
-        self.fields['first_name'].help_text = "Max 20 characters"
-        self.fields['last_name'].help_text = "Max 20 characters"
+        for field in self.fields:
+            text = "Max 20 characters"
+            if field == "password2" or field == "email":
+                text = None
+            self.fields[field].help_text = text
+        

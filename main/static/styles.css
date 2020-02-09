@@ -15,7 +15,9 @@ body{
     -o-transition: all 1s ease; 
     transition: all 1s ease; 
 }
-
+body p{
+    color: white;
+}
 .nav-bar{
     display: flex;
     padding: 2% 4%;
@@ -237,10 +239,19 @@ footer{
 
 .profile-content nav{
     float: right;
+    width: 750px;
+}
+
+.profile-content .media-body{
+    width: 250px;
+    text-align: center;
 }
 
 .profile-content nav a{
     text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 .profile-content .profile_nav{
@@ -253,14 +264,19 @@ footer{
     
 .profile-content .profile_nav li{
     display: inline-block;
-    color: rgb(0, 130, 119);
+    color: rgb(0, 0, 0);
     border-style: groove 1px;
     font-size: 17px;
-    margin-right: 10px;
+    margin: 0;
     background-color: rgba(252, 0, 252, 0.328);
     width: 210px;
     height: 10%;
     padding-top: 10px;
+}
+.profile-content .profile_nav li:hover{
+    color: white;
+    font-size: 19px;
+    padding-top: 8px;
 }
 
 .media-body{
@@ -271,7 +287,7 @@ footer{
     float: right;
     border-radius: 10px;
     width: 50%;
-    height: 35%;
+    height: 50%;
     margin-right: 200px;
     background-color: rgba(255, 0, 0, 0.363);
 }
@@ -283,8 +299,10 @@ footer{
 
 .profile_info ul li{
     font-size: 20px;
+    font-weight: bold;
     margin-top: 10px;
 }
+
 
 
 .card img{
