@@ -42,8 +42,6 @@ class Movies(models.Model):
     age = models.CharField(choices=AGE_CATEGORY, max_length=2)
     kind = models.CharField(choices=MOVIE_CATEGORY, max_length=3)
     price = models.FloatField()
-    description = models.TextField()
-    cew = models.TextField(blank=True)
     image = models.ImageField(blank=True, upload_to="movie_images")
 
     def __str__(self):
@@ -74,6 +72,17 @@ class Dates(models.Model):
     def __str__(self):
         return(f'{self.date}')
 
+class Seats(models.Model):
+    movie = models.ForeignKey(Movies, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    row = models.CharField(max_length = 1)
+    number = models.IntegerField()
+    date = models.DateField(auto_now_add=False)
+    time = models.TimeField(auto_now_add=False)
+    ordered = models.DateTimeField(default=datetime.now().strftime("%Y-%m-%d %H:%M"), blank=True, null=True) 
+
+    def __str__(self):
+        return f'row: {self.row}, seat: {self.number}'
         
 
 class Movie_dates(models.Model): #// signals appended - Creates this model straight after new Movie has been added
@@ -87,16 +96,15 @@ class Movie_dates(models.Model): #// signals appended - Creates this model strai
 
 class User_Seats(models.Model):
     movie = models.ForeignKey(Movies, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField(auto_now_add=False)
     time = models.TimeField(auto_now_add=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    row = models.CharField(max_length = 1)
-    number = models.IntegerField()
+    seats = models.ManyToManyField(Seats)
     ordered = models.DateTimeField(default=datetime.now().strftime("%Y-%m-%d %H:%M"), blank=True, null=True) 
     
 
     def __str__(self):
-        return f'Movie: {self.movie.title} Date: {self.date} Time: {self.time} Row: [{self.row}] Seat: [{self.number}]' 
+        return f'{self.user} / {self.movie.title} / {self.date} / {self.time}' 
 
 
 class Reservation(models.Model):

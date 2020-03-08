@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Movies, Reservation, User_Seats, Movie_dates
+from .models import Movies, Reservation, User_Seats, Movie_dates, Seats
 from django.contrib.auth.models import User
 from django.views.generic import DetailView
 from django.views.decorators.csrf import csrf_exempt
@@ -10,6 +10,8 @@ from django.core import serializers
 import json
 import simplejson
 from datetime import datetime, timedelta, time
+import requests
+from bs4 import BeautifulSoup
 
 
 
@@ -54,6 +56,22 @@ class show_single_movie(DetailView):
                 times_array.append(str(t))
             dic[str(d.date)] = times_array
         context["dates"] = dic
+
+        movie_details = requests.get(f"http://www.omdbapi.com/?t={movie.title}&apikey=23529a34").json() #// movie api to gather details about movie
+        context["details"] = json.dumps(movie_details)
+
+        actors_pics = {}
+        actors = movie_details["Actors"].split(",")
+        for actor in actors: #// to retrieve links to imdb where user can check the particular actor + to retireve photo links
+            split_name = actor.strip().split(" ")
+            url = requests.get(f"https://www.imdb.com/find?q={split_name[0]}+{split_name[1]}&ref_=nv_sr_sm").text
+            soup = BeautifulSoup(url, "lxml")
+            image = soup.find("td", {"class":"primary_photo"}).find("img")["src"]
+            link = soup.find("td", {"class":"primary_photo"}).find("a")["href"]
+            full_link = "https://www.imdb.com"+link+"?ref_=fn_al_nm_1"
+            actors_pics[actor.strip()] = [image, full_link] #// named JSON with array as the content
+       
+        context["actor_pics"] = json.dumps(actors_pics)
         return context
 
 @login_required
@@ -75,9 +93,9 @@ def order(request, pk):
         movie = Movies.objects.get(pk=pk)
         row_name = ([chr(x) for x in range(65,65+20,1)]) #// 65 is A so 20 letters for row naming
 
-        all_reservations = User_Seats.objects.filter(movie=movie, date=movie_date, time=movie_hour)
+        all_seats = Seats.objects.filter(movie=movie, date=movie_date, time=movie_hour)
         reserved_seats = []
-        for reserved in all_reservations:
+        for reserved in all_seats:
             try:
                 still_reserved = Reservation.objects.get(customer=reserved.user) #// if reservation has been deleted, delete the seats
                 reserved_seats.append(reserved.row+":"+str(reserved.number))
@@ -122,9 +140,6 @@ def confirmation(request):
         seats = []
         for user in user_info:
             seats.append(str(user["row"])+":"+str(user["seat"]))
-            new_seat = User_Seats.objects.create(movie=movie, user=customer, date=user_choice["date"], time=user_choice["hour"], row=user["row"], number=int(user["seat"]))
-            new_seat.save()
-
         context = {
             "movie":movie,
             "seats":seats
@@ -144,7 +159,32 @@ def buy_seats(request, pk):
         movie = Movies.objects.get(pk=pk)
         customer = User.objects.get(pk=request.user.id)
         for s in seats:
-            user_reserved_seats = User_Seats.objects.get(movie=movie, user=customer, row=s[:1], number=int(s[2:]))
+            new_seat_create = Seats.objects.create(
+                movie=movie, 
+                user=customer, 
+                row=s[:1], number=int(s[2:]), 
+                date=user_choice["date"], 
+                time=user_choice["hour"])
+            new_seat_create.save()
+
+            new_seat_get = Seats.objects.get(
+                movie=movie, user=customer, 
+                row=s[:1], number=int(s[2:]), 
+                date=user_choice["date"], 
+                time=user_choice["hour"])
+
+            user_seats, created = User_Seats.objects.get_or_create(
+                movie=movie, 
+                user=customer, 
+                date=user_choice["date"], 
+                time=user_choice["hour"])
+            user_seats.seats.add(new_seat_get)
+
+            user_reserved_seats = User_Seats.objects.get(
+                movie=movie, 
+                user=customer, 
+                date=user_choice["date"], 
+                time=user_choice["hour"])
             reservation, created = Reservation.objects.get_or_create(
                 customer=customer, 
                 )

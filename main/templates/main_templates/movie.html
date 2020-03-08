@@ -10,16 +10,19 @@
             <a class="nav-link" href="#">Description <span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Cew</a>
+            <a class="nav-link" href="#">Crew</a>
           </li>
           <li class="nav-item">
+            {% if user.is_authenticated %}
             <a class="nav-link" href="#" onclick="show_dates()">Find the suitable date and make the order</a>
+            {% else %}
+            <a class="nav-link" href="{% url 'login' %}">Log in to make an order</a>
+            {% endif %}
           </li>
         </ul>
       </div>
     </nav>
     <div class="content-movie">
-      {{object.description}}
     </div>
   </div>
 </div>
@@ -27,6 +30,7 @@
 <script type="text/javascript">
 
 const all_dates = {{dates|safe}} // Dictionary with dates/hours
+const movie_details = {{details|safe}} // API with details
 var close_link = ""
 var change_color = ""
 var info = ""
@@ -72,7 +76,7 @@ function override_content(content, type){
   else{
     header = "<h1>Available Hours:</h1>"
   }
-  document.querySelector(".content-movie").innerHTML = header + content
+  document.querySelector(".content-movie").innerHTML = header + "<div class='"+type+"'>"+content+"</div>"+"<div class='poster'>"+"<img src='"+movie_details["Poster"]+"'>"+"</div>"
 }
 
 ////// Displays available dates
@@ -150,19 +154,28 @@ function date_time_comparison(element,date_for_time){
 
 ///// switches inner html when clicking tabs
 $(function switch_contents(){
-
+  const actors_pics = {{actor_pics|safe}}
     function change(category){
-      document.querySelector(".content-movie").innerHTML = category
+      var final_content = category
+      if(Array.isArray(category)){ // checks if passed argument is array (of actors at this moment)
+        final_content = "";
+        for(x=0; x<category.length;x++){
+          actor = category[x].trim()
+          final_content = final_content + "<li><a href='"+actors_pics[actor][1]+"'>"+category[x]+"</li>"+"<li><img src='"+actors_pics[actor][0]+"'></li>"+"</a>"
+        }
+      }
+      document.querySelector(".content-movie").innerHTML = "<ul class='movie_details'>"+final_content+"</ul>" + "<div class='poster'>"+"<img src='"+movie_details["Poster"]+"'>"+"</div>"
       }
 
     $(".navbar-nav li a").each(function(){
       $(this).click(function(){
         let category_name = this.innerText.toLowerCase()
-        const sections = ["description", "cew"]
-        const django_vars= ["{{object.description}}", "{{object.cew}}"]
+        const sections = ["description", "crew"]
+        const actors = movie_details["Actors"].split(",")
+        const movie_details_json = [movie_details["Plot"], actors]
         for(i=0; i <= sections.length; i++){
           if(category_name.includes(sections[i])){
-            change(django_vars[i])
+            change(movie_details_json[i])
           }
         }
         

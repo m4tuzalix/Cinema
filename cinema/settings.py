@@ -137,6 +137,10 @@ STATICFILES_DIRS = [
         os.path.join(BASE_DIR, 'main/static'),
 ]
 
+TAGS_DIR = [
+    os.path.join(BASE_DIR, 'users/templatetags'),
+]
+
 CRISPY_FORMS = 'bootstrap4'
 
 LOGIN_REDIRECT_URL = "profile"

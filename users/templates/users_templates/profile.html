@@ -21,37 +21,57 @@
         </div>
     </div>
 </div>
-
 <script>
+    function show_reservation_content(content){
+        const movie_content = Object.values(content)
+        console.log(content["dates"])
+    }
+// shows all reservations made
+    function json_reader(json){
+        const key = Object.keys(json)
+        const value = Object.values(json)
+        var json_return = {}
+        json_return["key"] = key
+        json_return["value"] = value
+        return json_return
+    }
     function reservations(){
-        const all_reserved = {{reserved|safe}};
+        const all_reserved = {{reserved|safe}}
+        const movie_info = json_reader(all_reserved) //key=title, value=content
         var all_movies = "<ul class='res'>"
-        const change_header = document.querySelector(".account-heading").innerHTML = "<strong>Reservations</strong>"
-
-        for(x=0;x<all_reserved.length;x++){
-            const single_movie = "<li><span>"+all_reserved[x]["fields"]["title"]+"</span><img src=/media/"+all_reserved[x]["fields"]["image"]+"></li>"
-            all_movies += single_movie
+        if(movie_info["key"].length > 0){
+            const change_header = document.querySelector(".account-heading").innerHTML = "<strong>Reservations</strong>"
+            for(x=0;x<movie_info["key"].length;x++){ // each li is assigned to function which shows the seats
+                const seats= JSON.stringify(movie_info["value"][x])
+                const title = movie_info["key"][x]
+                const image = movie_info["value"][x]["image"]
+                const single_movie = "<li><span>"+"<a href = '{% url 'reservations' movie='title' %}'>".replace('title',title)+title+"</a>"+"</span><img src=/media/"+image+"></li>"
+                all_movies += single_movie
+            }
+        }
+        else{
+            const no_reservations = "<span class='no_reservations'>You have no reservations"
+            all_movies = "You have no reservations"
         }
         document.querySelector(".display_content").innerHTML = all_movies+"</ul>"
-
+        // hover functions to change the size of image along with movie title
         $(function(){
             $(".display_content ul li span").each(function(){
                 $(this).mouseover(function(){
                     $(this).css("color", "white")
-                    $(this).next().css("max-width", "120", "max-height", "120")
+                    $(this).next().css("max-width", "120", "max-height", "70")
                 }),
                 $(this).mouseleave(function(){
                     $(this).css("color", "")
-                    $(this).next().css("max-width", "100", "max-height", "100")
+                    $(this).next().css("max-width", "100", "max-height", "50")
                 });
             });
         });
     } 
-
+// jquery sets the default view at the page load
     $(function(){
         $(".display_content").html(profile())
     })
-
     function profile(){
         const change_header = document.querySelector(".account-heading").innerHTML = "Hello, <strong>{{request.user.username}}</strong>"
         var profile_info = "<div class='profile_info'>"+
@@ -63,7 +83,5 @@
                             "</div>"
         document.querySelector(".display_content").innerHTML = profile_info;
     }
-
-
 </script>
 {% endblock %}

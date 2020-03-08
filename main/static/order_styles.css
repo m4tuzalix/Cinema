@@ -1,0 +1,98 @@
+
+.navbar li{
+    margin-left: 30px;
+}
+.content-movie{
+    display: inline-flexbox;
+}
+
+.content-movie h1{
+    text-align: center;
+    margin-left: 5px;
+    padding-bottom: 10px;
+    color: rgba(79, 12, 141, 0.733);
+}
+
+.content-movie li{
+    font-size: 15px;
+    text-align: left;
+    color: rgb(7, 2, 2);
+    text-decoration: none;
+    list-style-type: square;
+    margin-left: 20px;
+    margin-bottom: 5px;
+}
+
+.content-movie .movie_details{
+    float: left;
+    margin-left: 15px;
+}
+
+.content-movie .movie_details li{
+    list-style: none;
+    font-size: large;
+    margin-top: 10px;
+}
+
+.content-movie .movie_details a{
+    text-decoration: none;
+}
+
+.content-movie .movie_details img{
+    margin-left: 10px;
+    width: 40px;
+    height: 60px;
+}
+
+.content-movie .movie_details img:hover{
+    margin-left: 10px;
+    width: 45px;
+    height: 65px;
+}
+
+.content-movie span{
+    text-align: center;
+    margin-left: 10px;
+    font-size: 15px;
+    color: rgb(8, 1, 1);
+}
+
+
+.content-movie li:hover{
+    color: tomato;
+}
+
+.container-movie{
+    height: 50%;
+    display: none;
+}
+
+.content-movie .poster{
+    margin-left: 405px; 
+}
+
+.content-movie .poster img{
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.content-movie .dates, .hours{
+    float: left;
+    margin-left: 50px;
+}
+
+.content-movie .dates span{
+    color: teal;
+}
+
+
+/*----------------order_seat---------------------------------------*/
+.screen{
+    background-color: rgb(16, 13, 155);
+    color: white;
+    font-size: 15px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+

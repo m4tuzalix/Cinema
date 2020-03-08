@@ -1,0 +1,74 @@
+{% extends "main_templates/main.html" %}
+{% load crispy_forms_tags %}
+{% load json_tags %}
+{% block content %}
+<div class="container">
+    <div class="profile-content">
+        <div class="mt-5">
+            <div class="media-body mt-3">
+                <h2 class="account-heading" onclick="show()" style="color: red; margin-left: 20px; margin-bottom: 15px;"><strong>{{movie}}</strong></h2>
+            </div>
+            <section class="display_content">
+                <div class="table-responsive">          
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Date</th>
+                          <th>Hour</th>
+                          <th>Seats</th>
+                          <th>Time left</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for key,value in reserved.items %}
+                            {% for time in value.times|dictsort:1 %}
+                                <tr>
+                                    <td>{{key}}</td>
+                                    <td>{{time}}</td>
+                                    <td>0</td>
+                                    <td>test</td>
+                                </tr>
+                            {% endfor %}
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                    </div>
+            </section>
+        </div>
+    </div>
+</div>
+<script>
+const reserved = {{reserved_json|safe}}
+function show(){
+    const d = json_reader(reserved)
+    console.log(d)
+}
+
+function json_reader(json){
+    const key = Object.keys(json)
+    const value = Object.values(json)
+    var json_return = {}
+    json_return["key"] = key
+    json_return["value"] = value
+    return json_return
+    }
+
+$(function seats(){
+    const json_content = json_reader(reserved)
+    for(x=0;x<json_content["key"].length;x++){
+        $(".display_content table td").each(function(){
+            const td_text = $(this).text()
+            if(td_text.includes(json_content["key"][x])){
+               const td_hour = $(this).next().text()
+               const json_hour = json_content["value"][x]["times"]
+               if(Object.keys(json_hour).includes(td_hour)){
+                   const seats = json_content["value"][x]["times"][td_hour]
+                   const td_seat = $(this).next().next()
+                   $(td_seat).html(seats.length)
+               }
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

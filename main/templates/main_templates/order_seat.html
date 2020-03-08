@@ -90,25 +90,30 @@
           array.push(user_info)
         }
       })
-      var new_array = JSON.stringify({array: array}) // converts array to string json
+      if(array.length == 0){
+        alert("You can't make empty order")
+      }
+      else{
+        var new_array = JSON.stringify({array: array}) // converts array to string json
 
-      // ajax call to send the data to views.py
-      $.ajax({
-        url: "{% url 'make-order' %}",
-        type: 'POST',
-        data: new_array,
-        processData: false,
-        contentType: "application/json",
-        dataType: "json",
-        headers: {"X-CSRFToken":'{{ csrf_token }}'},
-        success: function (result) {
-          console.log(result.d)
-          window.location = "{% url 'confirmation' %}"
-        },
-        error: function (result) {
-            console.log(result);
-        }
-      });
+        // ajax call to send the data to views.py
+        $.ajax({
+          url: "{% url 'make-order' %}",
+          type: 'POST',
+          data: new_array,
+          processData: false,
+          contentType: "application/json",
+          dataType: "json",
+          headers: {"X-CSRFToken":'{{ csrf_token }}'},
+          success: function (result) {
+            console.log(result.d)
+            window.location = "{% url 'confirmation' %}"
+          },
+          error: function (result) {
+              console.log(result);
+          }
+        });
+      }
     }
     
     /// displays how many seats has been choosen along with price

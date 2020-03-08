@@ -27,6 +27,7 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name="users_templates/login.html"), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name="users_templates/logout.html"), name='logout'),
     path('profile/', UV.profile, name='profile'),
+    path('reservations/<str:movie>', UV.reservations, name='reservations')
 ]
 
 if settings.DEBUG:

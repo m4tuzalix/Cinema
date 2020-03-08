@@ -1,7 +1,8 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from main.models import Movies, Movie_dates, Hours, Dates
 from datetime import datetime, timedelta
+import os
 
 
 @receiver(post_save, sender=Movies)
@@ -18,5 +19,13 @@ def create_movie_dates(sender, instance, created, **kwargs):
                 new_schedule.time.add(h)
             new_schedule.save()
 
+@receiver(post_delete, sender=Movies)
+def delete_movie_avatars(sender, instance, **kwargs):
+    if instance.image:
+        delete_image_function(instance.image.path)
+
+def delete_image_function(path):
+    if os.path.isfile(path):
+        os.remove(path)
 
 
