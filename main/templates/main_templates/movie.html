@@ -132,7 +132,7 @@ function date_time_comparison(element,date_for_time){
     date_time_element.setHours(str_element.substring(0,2))
     date_time_element.setMinutes(str_element.substring(3,5))
     date_time_element.setSeconds(str_element.substring(6,8))
-
+    
     const time_calculation = (new Date(date_time_element) -  new Date(today+" "+current_time))*0.001 / 60 /// parsing miliseconds to seconds and then to minutes
     if(time_calculation > 30){
       return true

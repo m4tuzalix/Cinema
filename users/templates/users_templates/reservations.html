@@ -1,7 +1,12 @@
 {% extends "main_templates/main.html" %}
 {% load crispy_forms_tags %}
 {% load json_tags %}
+{% load static %}
 {% block content %}
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'reservations.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
 <div class="container">
     <div class="profile-content">
         <div class="mt-5">
@@ -33,16 +38,16 @@
                       </tbody>
                     </table>
                     </div>
+                    <div class="seats_displayer">
+                        <ul>
+                        </ul>
+                    </div>
             </section>
         </div>
     </div>
 </div>
 <script>
 const reserved = {{reserved_json|safe}}
-function show(){
-    const d = json_reader(reserved)
-    console.log(d)
-}
 
 function json_reader(json){
     const key = Object.keys(json)
@@ -57,18 +62,76 @@ $(function seats(){
     const json_content = json_reader(reserved)
     for(x=0;x<json_content["key"].length;x++){
         $(".display_content table td").each(function(){
-            const td_text = $(this).text()
-            if(td_text.includes(json_content["key"][x])){
+            const td_date = $(this).text()
+            if(td_date.includes(json_content["key"][x])){
                const td_hour = $(this).next().text()
                const json_hour = json_content["value"][x]["times"]
                if(Object.keys(json_hour).includes(td_hour)){
                    const seats = json_content["value"][x]["times"][td_hour]
                    const td_seat = $(this).next().next()
-                   $(td_seat).html(seats.length)
+                   const timeout = $(this).siblings().last()
+                   var seats_array = []
+                   seats.forEach(element => {
+                       const seat_json = json_reader(element)
+                       seats_array.push(seat_json["key"]+":"+seat_json["value"])
+                   });
+                   $(td_seat).html("<span onclick='display_seats(this.nextSibling)'>"+seats.length+"</span>"+"<span class='seats' value='"+seats_array+"'></span>")
+                   const counter_array = [td_date,td_hour]
+                   var timeout_html = "<span class='huj'>word</span>".replace("word", {display})
+                   $(timeout).html(timeout_html)
                }
             }
         });
     }
 });
+
+function display_seats(seats){
+    const all_seats = seats.getAttribute("value")
+    const all_seats_splited = all_seats.split(",")
+    const seats_displayer = document.querySelector(".seats_displayer ul")
+    seats_displayer.innerHTML = "";
+    for(x=0; x<all_seats_splited.length;x++){
+        const seat = all_seats_splited[x]
+        seats_displayer.innerHTML += "<li>"+seat+"</li>"
+    }
+    seats_displayer.style["visibility"] = "visible";
+}
+
+function counter(doc){
+    var n = 10
+    
+    var test = setInterval(()=>{
+        doc.innerHTML = String(n)
+        n -= 1 
+        if(n==2-1){
+            clearInterval(test)
+        }
+    },1000)
+    // console.log(array[0])
+    // const normal_date = new Date();
+    // const today = normal_date.getFullYear() + '-'
+    //             + ('0' + (normal_date.getMonth()+1)).slice(-2) + '-'
+    //             + ('0' + normal_date.getDate()).slice(-2);
+    // const current_time = ('0' + normal_date.getHours()).slice(-2) + ':'
+    // + ('0' + normal_date.getMinutes()).slice(-2) + ':'
+    // + ('0' + normal_date.getSeconds()).slice(-2);
+
+    // if(String(time).substring(2,3) === ":"){
+    //     const date_time_element = new Date(date);
+    //     const str_element = String(time)
+    //     date_time_element.setHours(str_element.substring(0,2))
+    //     date_time_element.setMinutes(str_element.substring(3,5))
+    //     date_time_element.setSeconds(str_element.substring(6,8))
+    //     console.log(date_time_element)
+    // }
+}
+
+new Vue({
+    delimiters: ['[[', ']]'],
+    el: ".seats_displayer",
+    data: { 
+        display: "redbox"
+  }
+})
 </script>
 {% endblock %}

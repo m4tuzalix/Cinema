@@ -1,0 +1,17 @@
+.seats_displayer{
+    text-align: center;
+    visibility: hidden;
+    margin-top: 10px;
+    font-size: large;
+    font-weight: bold;
+    color: aliceblue;
+}
+
+.seats_displayer ul li{
+    display: inline-flex;
+    margin-right: 10px;
+}
+
+.seats{
+    visibility: hidden;
+}

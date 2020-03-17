@@ -135,6 +135,7 @@ MEDIA_URL = "/media/"
 #-----------------------------------------------------
 STATICFILES_DIRS = [
         os.path.join(BASE_DIR, 'main/static'),
+        os.path.join(BASE_DIR, 'users/static'),
 ]
 
 TAGS_DIR = [
