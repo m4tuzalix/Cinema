@@ -66,8 +66,8 @@ class Hours(models.Model):
         return f"{self.hours}"
 
 class Dates(models.Model):
-    movie = models.ForeignKey(Movies, on_delete=models.CASCADE)
     date = models.DateField(auto_now_add=False)
+    movies = models.ManyToManyField(Movies)
 
     def __str__(self):
         return(f'{self.date}')

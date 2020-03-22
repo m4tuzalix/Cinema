@@ -5,7 +5,7 @@ from users.models import Profile
 
 
 
-models = [Movies, Reservation, Profile, Movie_dates, Hours, User_Seats, Dates, Seats]
+models = [Movies, Reservation, Profile, Movie_dates, User_Seats, Dates, Seats]
 
 for model in models:
     admin.site.register(model)

@@ -9,10 +9,16 @@ import os
 def create_movie_dates(sender, instance, created, **kwargs):
     if created:
         all_hours = Hours.objects.all()
+        if len(all_hours) == 0:
+            new_hours = ["10:00:00", "12:00:00", "13:00:00", "15:00:00", "18:00:00", "20:00:00", "22:00:00"]
+            for hour in new_hours:
+                Hours.objects.create(hours=hour)
+        all_hours = Hours.objects.all()
         new_schedule = Movie_dates.objects.create(main_movie=instance)
         for x in range(7):
             date = datetime.now() + timedelta(days=x)
-            new_date = Dates.objects.create(movie=instance, date=date)
+            new_date, created = Dates.objects.get_or_create(date=date) #// creates if doesn't exist and updates if exists
+            new_date.movies.add(instance)
             new_date.save()
             new_schedule.dates.add(new_date)
             for h in all_hours:

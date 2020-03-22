@@ -27,11 +27,11 @@
                       <tbody>
                         {% for key,value in reserved.items %}
                             {% for time in value.times|dictsort:1 %}
-                                <tr>
+                                <tr class="main_data">
                                     <td>{{key}}</td>
                                     <td>{{time}}</td>
                                     <td>0</td>
-                                    <td>test</td>
+                                    <td>null</td>
                                 </tr>
                             {% endfor %}
                         {% endfor %}
@@ -58,33 +58,6 @@ function json_reader(json){
     return json_return
     }
 
-$(function seats(){
-    const json_content = json_reader(reserved)
-    for(x=0;x<json_content["key"].length;x++){
-        $(".display_content table td").each(function(){
-            const td_date = $(this).text()
-            if(td_date.includes(json_content["key"][x])){
-               const td_hour = $(this).next().text()
-               const json_hour = json_content["value"][x]["times"]
-               if(Object.keys(json_hour).includes(td_hour)){
-                   const seats = json_content["value"][x]["times"][td_hour]
-                   const td_seat = $(this).next().next()
-                   const timeout = $(this).siblings().last()
-                   var seats_array = []
-                   seats.forEach(element => {
-                       const seat_json = json_reader(element)
-                       seats_array.push(seat_json["key"]+":"+seat_json["value"])
-                   });
-                   $(td_seat).html("<span onclick='display_seats(this.nextSibling)'>"+seats.length+"</span>"+"<span class='seats' value='"+seats_array+"'></span>")
-                   const counter_array = [td_date,td_hour]
-                   var timeout_html = "<span class='test'>word</span>".replace("word", {display})
-                   $(timeout).html(timeout_html)
-               }
-            }
-        });
-    }
-});
-
 function display_seats(seats){
     const all_seats = seats.getAttribute("value")
     const all_seats_splited = all_seats.split(",")
@@ -97,41 +70,80 @@ function display_seats(seats){
     seats_displayer.style["visibility"] = "visible";
 }
 
-function counter(doc){
-    var n = 10
-    
-    var test = setInterval(()=>{
-        doc.innerHTML = String(n)
-        n -= 1 
-        if(n==2-1){
-            clearInterval(test)
-        }
-    },1000)
-    // console.log(array[0])
-    // const normal_date = new Date();
-    // const today = normal_date.getFullYear() + '-'
-    //             + ('0' + (normal_date.getMonth()+1)).slice(-2) + '-'
-    //             + ('0' + normal_date.getDate()).slice(-2);
-    // const current_time = ('0' + normal_date.getHours()).slice(-2) + ':'
-    // + ('0' + normal_date.getMinutes()).slice(-2) + ':'
-    // + ('0' + normal_date.getSeconds()).slice(-2);
-
-    // if(String(time).substring(2,3) === ":"){
-    //     const date_time_element = new Date(date);
-    //     const str_element = String(time)
-    //     date_time_element.setHours(str_element.substring(0,2))
-    //     date_time_element.setMinutes(str_element.substring(3,5))
-    //     date_time_element.setSeconds(str_element.substring(6,8))
-    //     console.log(date_time_element)
-    // }
-}
-
-new Vue({
+const json_content = json_reader(reserved)
+const rows = document.querySelectorAll(".display_content table tr.main_data")
+for(let row of rows){
+    new Vue({
     delimiters: ['[[', ']]'],
-    el: ".seats_displayer",
+    el:row,
     data: { 
-        display: "redbox"
-  }
-})
+        display: 20,
+        seats_number: "0",
+        date: "",
+        hour: "",
+    },
+    methods:{
+        get_seats(){
+            for(x=0;x<json_content["key"].length;x++){
+                const date = this.$el.children[0].innerText
+                if(date.includes(json_content["key"][x])){
+                    this.date = date
+                    const hour = this.$el.children[1].innerText
+                    const json_hour = json_content["value"][x]["times"]
+                    if(Object.keys(json_hour).includes(hour)){
+                        this.hour = hour
+                        const seats = json_content["value"][x]["times"][hour]
+                        return seats
+                    }
+                    break
+                }
+            }
+        },
+        movie_time(date,hour){
+            const movie_date = new Date(date)
+            const movie_hour = String(hour)
+            movie_date.setHours(movie_hour.substring(0,2))
+            movie_date.setMinutes(movie_hour.substring(3,5))
+            movie_date.setSeconds(movie_hour.substring(6,8))
+            return movie_date
+        },
+        count_down(date,hour){
+            const counter = setInterval(()=>{
+                const movie_time_details = this.movie_time(date,hour)
+                const today = new Date()
+                const final_time = (movie_time_details - today)
+                var hours = Math.floor(final_time*0.001/60/60)
+                var minutes = Math.floor((final_time % (1000 * 60 * 60)) / (1000 * 60))
+                var seconds = Math.floor((final_time % (1000 * 60)) / 1000)
+                if(seconds < 10){
+                    seconds = "0"+String(seconds)
+                }
+                else if(minutes < 10){
+                    minutes = "0"+String(minutes)
+                }
+                else if(hours < 10){
+                    hours = "0"+String(hours)
+                }
+                this.$el.children[3].innerText = String(hours)+":"+String(minutes)+":"+String(seconds)
+            },1000)
+        },
+        assign_seats(){
+            const seats = this.get_seats()
+            const td_seat = this.$el.children[2]
+            const seats_array = []
+                seats.forEach(td => {
+                    const seat_json = json_reader(td)
+                    seats_array.push(seat_json["key"]+":"+seat_json["value"])
+                });
+            this.seats_number = seats.length
+            td_seat.innerHTML = "<span onclick='display_seats(this.nextSibling)'>"+[[this.seats_number]]+"</span>"+"<span class='seats' value='"+seats_array+"'></span>"
+            this.count_down(this.date, this.hour)
+        }
+    },
+    mounted(){
+        this.assign_seats()
+    },
+    })
+}
 </script>
 {% endblock %}
