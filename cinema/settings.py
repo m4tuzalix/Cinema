@@ -138,8 +138,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 #-----------------------------------------------------
 STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, 'main/static'),
-        os.path.join(BASE_DIR, 'users/static'),
+        os.path.join(BASE_DIR, 'main/static/'),
+        os.path.join(BASE_DIR, 'users/static/'),
 ]
 
 TAGS_DIR = [
@@ -150,3 +150,14 @@ CRISPY_FORMS = 'bootstrap4'
 
 LOGIN_REDIRECT_URL = "profile"
 LOGIN_URL = "login"
+
+#-------- EMAIl SETTINGS
+os.environ["EMAIL_USER"] = 'mateuszwolowicz96@gmail.com'
+os.environ["EMAIL_PASS"] = 'Maniek12'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get("EMAIL_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_PASS")

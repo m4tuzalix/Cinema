@@ -1,5 +1,6 @@
 .display_content{
     height: 60%;
+    color: white;
 }
 
 .display_content .res{
@@ -17,7 +18,6 @@
     margin-bottom: 10px;
     margin-top: 10px;
     font-size: 16px;
-    color: black;
     font: bolder;
     font-weight: bold;
 }
@@ -28,6 +28,100 @@
     max-height: 50px;
     margin-left: 20px;
     margin-right: 10px;
+}
+
+.display_content .main_data td{
+    color: white;
+}
+
+.display_content .no_reservations{
+    margin-left: 41.5%;
+    font-weight: bold;
+    font-size: 20px;
+    color: green;
+}
+
+.profile-content{
+    transition: all 1s ease;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: rgba(109, 0, 128, 0.705);
+    height: 500px;
+    width: 1000px;
+    z-index: 1000;
+    left: auto;
+    margin-left: auto;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+.profile-content nav{
+    float: right;
+    width: 750px;
+}
+
+.profile-content .media-body{
+    width: 250px;
+    text-align: center;
+}
+
+.profile-content nav a{
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.profile-content .profile_nav{
+    text-align: center;
+    list-style: none;
+    margin-right: 20px;
+    clear: both;
+
+}
+    
+.profile-content .profile_nav li{
+    display: inline-block;
+    color: rgb(0, 0, 0);
+    border-style: groove 1px;
+    font-size: 17px;
+    margin: 0;
+    background-color: rgba(252, 0, 252, 0.328);
+    width: 210px;
+    height: 10%;
+    padding-top: 10px;
+}
+.profile-content .profile_nav li:hover{
+    color: white;
+    font-size: 19px;
+    padding-top: 8px;
+}
+
+.profile_info{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30px;
+    border-radius: 10px;
+    width: 50%;
+    height: 50%;
+    background-color: rgba(255, 0, 0, 0.363);
+}
+
+.profile_info ul{
+    list-style: none;
+    padding: 5 5 5;
+}
+
+.profile_info ul li{
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.profile_info ul li span{
+    color: green;
 }
 
 

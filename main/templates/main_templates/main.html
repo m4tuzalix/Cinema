@@ -4,7 +4,7 @@
     <title>Cinema project</title>
     <meta name="viewport" content="width=device-width, initail-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'bs_style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'bs_styles.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'order_styles.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'profile_style.css' %}">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -48,11 +48,13 @@
         <div class="content">
             <div class="mt-1">
                 {% if messages %}
-                {% for message in messages %}
-                    <div class='alert alert-{{message.tags}}'>
-                        {{message}}
+                  {% for message in messages %}
+                    <div class="container">
+                        <div class='alert alert-{{message.tags}}'>
+                            {{message}}
+                        </div>
                     </div>
-                {% endfor %}
+                  {% endfor %}
                 {% endif %}
             </div>   
             {% block content %}{% endblock %}
